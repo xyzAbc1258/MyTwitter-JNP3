@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTwitter", "MyTwitter\MyTwitter.csproj", "{6E758100-0697-49C8-9B6A-EB05D1D68FA8}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{84E9FA96-2C6D-45C7-B230-74353584C975}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E758100-0697-49C8-9B6A-EB05D1D68FA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E758100-0697-49C8-9B6A-EB05D1D68FA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E758100-0697-49C8-9B6A-EB05D1D68FA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E758100-0697-49C8-9B6A-EB05D1D68FA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84E9FA96-2C6D-45C7-B230-74353584C975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84E9FA96-2C6D-45C7-B230-74353584C975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84E9FA96-2C6D-45C7-B230-74353584C975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84E9FA96-2C6D-45C7-B230-74353584C975}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2970F7EE-9ED2-4941-9BB9-5E8D4D5BBA42}
+	EndGlobalSection
+EndGlobal
