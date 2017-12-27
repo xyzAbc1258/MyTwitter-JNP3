@@ -6,3 +6,23 @@ services:
     build:
       context: .
       dockerfile: MyTwitter/Dockerfile
+    networks:
+      - appnet
+    depends_on:
+      - databaseServer
+
+  databaseServer:
+    image: databaseserver
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    volumes:
+      - ./database:/var/opt/sqlserver
+    networks:
+      - appnet
+    ports:
+      - 1433
+    
+networks:
+  appnet:
+    driver: bridge

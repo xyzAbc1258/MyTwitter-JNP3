@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Post>
+@{
+    ViewData["Title"] = "Index";
+}
+    
+<h2>Index</h2>
+@Html.ActionLink("Dodaj post","Create")
+@Html.Partial("PostsList",Model)
