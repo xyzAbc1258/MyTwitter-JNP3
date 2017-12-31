@@ -11,6 +11,7 @@ services:
     depends_on:
       - databaseserver
       - mytwitter.queueprocessor
+      - redisserver
 
   databaseserver:
     image: databaseserver
@@ -38,6 +39,14 @@ services:
     image: rabbitmq
     networks:
       - appnet
+
+  redisserver:
+    image: redis:3.2
+    command: redis-server --appendonly yes
+    networks:
+      - appnet
+    volumes:
+      - ./redis:/data
 
 networks:
   appnet:

@@ -13,18 +13,25 @@ namespace MyTwitter.Controllers
 {
     public class PostsController : Controller
     {
+        public const string VisitsCounterKey = "visitsCounter";
+
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IQueueClient _queueClient;
+        private readonly IRedisClient _redisClient;
 
-        public PostsController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, IQueueClient queueClient)
+        public PostsController(ApplicationDbContext applicationDbContext, 
+            UserManager<ApplicationUser> userManager, 
+            IQueueClient queueClient, 
+            IRedisClient redisClient)
         {
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
             _queueClient = queueClient;
+            _redisClient = redisClient;
         }
         
-        public IActionResult Index(int? userId = null)
+        public async Task<IActionResult> Index(int? userId = null)
         {
             if (userId == null)
             {
@@ -33,6 +40,12 @@ namespace MyTwitter.Controllers
             var user = _applicationDbContext.ApplicationUsers.SingleOrDefault(x => x.Id == userId);
             if (user != null)
             {
+                ApplicationUser currUser = HttpContext.User.Identity.IsAuthenticated ? (await _userManager.GetUserAsync(HttpContext.User)) : null;
+                string counterKey = "c_" + user.Id;
+                long counter = currUser == user
+                    ? _redisClient.GetValue<long>(counterKey)
+                    : _redisClient.IncrementValue(counterKey);
+                ViewData[VisitsCounterKey] = counter;
                 return View("Index",
                     _applicationDbContext.Posts.Where(x => x.ApplicationUser == user).OrderByDescending(x => x.DateCreated).Take(20).ToList());
             }
@@ -52,7 +65,7 @@ namespace MyTwitter.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var post = new Post(){ApplicationUser = user, Message = message};
-            _queueClient.Create(post);
+            await _queueClient.Create(post);
             //_applicationDbContext.Posts.Add(post);
             //_applicationDbContext.SaveChanges();
             return RedirectToAction("Index", new {userId = user.Id});

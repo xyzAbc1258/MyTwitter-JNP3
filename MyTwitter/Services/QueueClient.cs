@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MassTransit;
 using MyTwitter.Common;
 using MyTwitter.Models;
@@ -14,13 +15,13 @@ namespace MyTwitter.Services
             _busControl = busControl;
         }
 
-        public async void Create(Post post)
+        public async Task Create(Post post)
         {
             var endp = await _busControl.GetSendEndpoint(new Uri("rabbitmq://queueserver/messagesA"));
             await endp.Send(new CreateMessageDTO(){Message = post.Message, UserId = post.ApplicationUser.Id});
         }
 
-        public async void Update(Post post)
+        public async Task Update(Post post)
         {
             var endp = await _busControl.GetSendEndpoint(new Uri("rabbitmq://queueserver/messagesU"));
             await endp.Send(new UpdateMessageDTO() {Message = post.Message, PostId = post.Id});

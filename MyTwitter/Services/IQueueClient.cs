@@ -1,10 +1,11 @@
-﻿using MyTwitter.Models;
+﻿using System.Threading.Tasks;
+using MyTwitter.Models;
 
 namespace MyTwitter.Services
 {
     public interface IQueueClient
     {
-        void Create(Post post);
-        void Update(Post post);
+        Task Create(Post post);
+        Task Update(Post post);
     }
 }

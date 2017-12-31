@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MyTwitter.Data;
 using MyTwitter.Models;
 using MyTwitter.Services;
+using ServiceStack.Redis;
 
 namespace MyTwitter
 {
@@ -37,6 +38,11 @@ namespace MyTwitter
                         ps.Username("guest"); 
                         ps.Password("guest");
                     })));
+
+            services.AddTransient<ServiceStack.Redis.IRedisClient>(
+                p => new RedisManagerPool("redisserver").GetClient());
+
+            services.AddTransient<Services.IRedisClient, Services.RedisClient>();
 
             new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).Options).Database.Migrate();
