@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyTwitter", "MyTwitter\MyTw
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{84E9FA96-2C6D-45C7-B230-74353584C975}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTwitter.QueueProcessor", "MyTwitter.QueueProcessor\MyTwitter.QueueProcessor.csproj", "{4DB47CC0-573B-403C-853B-9006D989FB1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTwitter.Common", "MyTwitter.Common\MyTwitter.Common.csproj", "{DEDE987C-42B9-4EDD-AFC6-9315A9325D3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{84E9FA96-2C6D-45C7-B230-74353584C975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84E9FA96-2C6D-45C7-B230-74353584C975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84E9FA96-2C6D-45C7-B230-74353584C975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB47CC0-573B-403C-853B-9006D989FB1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB47CC0-573B-403C-853B-9006D989FB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB47CC0-573B-403C-853B-9006D989FB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB47CC0-573B-403C-853B-9006D989FB1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEDE987C-42B9-4EDD-AFC6-9315A9325D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEDE987C-42B9-4EDD-AFC6-9315A9325D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEDE987C-42B9-4EDD-AFC6-9315A9325D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEDE987C-42B9-4EDD-AFC6-9315A9325D3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

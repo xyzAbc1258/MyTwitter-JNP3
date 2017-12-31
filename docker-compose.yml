@@ -9,9 +9,10 @@ services:
     networks:
       - appnet
     depends_on:
-      - databaseServer
+      - databaseserver
+      - mytwitter.queueprocessor
 
-  databaseServer:
+  databaseserver:
     image: databaseserver
     build:
       context: ./database
@@ -23,6 +24,21 @@ services:
     ports:
       - 1433
     
+  mytwitter.queueprocessor:
+    image: mytwitter.queueprocessor
+    build:
+      context: .
+      dockerfile: MyTwitter.QueueProcessor/Dockerfile
+    networks:
+      - appnet
+    depends_on:
+      - queueserver
+
+  queueserver:
+    image: rabbitmq
+    networks:
+      - appnet
+
 networks:
   appnet:
     driver: bridge
