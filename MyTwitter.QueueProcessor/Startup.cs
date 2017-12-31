@@ -25,8 +25,8 @@ namespace MyTwitter.QueueProcessor
                                 cf.Username("guest");
                                 cf.Password("guest");
                             });
-                        c.ReceiveEndpoint(host, "CreateMessage",x => x.Consumer<AddConsumer>());
-                        c.ReceiveEndpoint(host, "UpdateMessage",x => x.Consumer<UpdateConsumer>());
+                        c.ReceiveEndpoint(host, "messagesA",x => x.Consumer<AddConsumer>());
+                        c.ReceiveEndpoint(host, "messagesU",x => x.Consumer<UpdateConsumer>());
                     }
                 )
             );

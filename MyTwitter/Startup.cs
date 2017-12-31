@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
@@ -29,11 +30,21 @@ namespace MyTwitter
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddTransient<IBusControl>(
+                prv => Bus.Factory.CreateUsingRabbitMq(
+                    cfg => cfg.Host("queueserver", "/", ps =>
+                    {
+                        ps.Username("guest"); 
+                        ps.Password("guest");
+                    })));
+
             new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).Options).Database.Migrate();
             
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddTransient<IQueueClient, QueueClient>();
 
             services.AddMvc();
 

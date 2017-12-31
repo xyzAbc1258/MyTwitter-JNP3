@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyTwitter.Data;
 using MyTwitter.Models;
+using MyTwitter.Services;
 
 namespace MyTwitter.Controllers
 {
@@ -14,11 +15,13 @@ namespace MyTwitter.Controllers
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IQueueClient _queueClient;
 
-        public PostsController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
+        public PostsController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, IQueueClient queueClient)
         {
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
+            _queueClient = queueClient;
         }
         
         public IActionResult Index(int? userId = null)
@@ -49,8 +52,9 @@ namespace MyTwitter.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var post = new Post(){ApplicationUser = user, Message = message};
-            _applicationDbContext.Posts.Add(post);
-            _applicationDbContext.SaveChanges();
+            _queueClient.Create(post);
+            //_applicationDbContext.Posts.Add(post);
+            //_applicationDbContext.SaveChanges();
             return RedirectToAction("Index", new {userId = user.Id});
         }
     }
