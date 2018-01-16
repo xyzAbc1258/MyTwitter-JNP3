@@ -1,6 +1,20 @@
 version: '3'
 
 services:
+  varnishtwitter:
+    image: varnishtwitter
+    build:
+      context: ./varnish
+      dockerfile: Dockerfile
+    volumes:
+      - ./varnish:/etc/varnish
+    networks:
+      - appnet
+    ports:
+      - 80
+    depends_on:
+      - mytwitter
+
   mytwitter:
     image: mytwitter
     build:
@@ -12,7 +26,7 @@ services:
       - databaseserver
       - mytwitter.queueprocessor
       - redisserver
-
+      
   databaseserver:
     image: databaseserver
     build:
