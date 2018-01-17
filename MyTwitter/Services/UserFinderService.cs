@@ -24,9 +24,10 @@ namespace MyTwitter.Services
         public IList<ApplicationUser> GetUsers(string searchPhrase)
         {
             _userIndexInsertionService.Initialize();
-
+            
             var indices = _elasticClient.Search<UserDTO>(q =>
-                q.Query(d => d.Term(u => u.Verbatim().Field(x => x.Name).Value(searchPhrase)))).Documents.Select(x => x.Id).ToArray();
+                q.Query(d => d.Prefix(x => x.Name,searchPhrase,null,(MultiTermQueryRewrite)null,null)))
+                        .Documents.Select(x => x.Id).Distinct().ToArray();
             var users = _applicationDbContext.ApplicationUsers.Where(x => indices.Contains(x.Id)).ToList();
             return users;
         }

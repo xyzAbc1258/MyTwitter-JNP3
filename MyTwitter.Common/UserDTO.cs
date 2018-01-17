@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MyTwitter.Common
+﻿namespace MyTwitter.Common
 {
     public class UserDTO
     {

@@ -46,9 +46,6 @@ namespace MyTwitter
 
             services.AddTransient<Services.IRedisClient, Services.RedisClient>();
 
-            new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).Options).Database.Migrate();
-            
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -70,6 +67,11 @@ namespace MyTwitter
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
