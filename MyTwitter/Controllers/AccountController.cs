@@ -24,21 +24,34 @@ namespace MyTwitter.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IUserFinderService _userFinderService;
+        private readonly IUserIndexInsertionService _userIndexInsertionService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IUserFinderService userFinderService,
+            IUserIndexInsertionService userIndexInsertionService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _userFinderService = userFinderService;
+            _userIndexInsertionService = userIndexInsertionService;
         }
 
         [TempData]
         public string ErrorMessage { get; set; }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public string[] Find(string searchPhrase)
+        {
+            return _userFinderService.GetUsers(searchPhrase).Select(x => x.UserName).ToArray();
+        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -229,7 +242,7 @@ namespace MyTwitter.Controllers
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
+                    _userIndexInsertionService.Insert(user);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
                     return RedirectToLocal(returnUrl);

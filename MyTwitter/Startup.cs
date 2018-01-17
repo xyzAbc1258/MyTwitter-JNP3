@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MyTwitter.Data;
 using MyTwitter.Models;
 using MyTwitter.Services;
+using Nest;
 using ServiceStack.Redis;
 
 namespace MyTwitter
@@ -51,6 +53,14 @@ namespace MyTwitter
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddTransient<IQueueClient, QueueClient>();
+
+            var cs = new ConnectionSettings(new Uri("http://elasticsearch:9200"));
+            cs.DefaultIndex("default");
+            
+            services.AddTransient<IElasticClient>(x => new ElasticClient(cs));
+            services.AddTransient<IUserFinderService, UserFinderService>();
+            services.AddTransient<IUserIndexInsertionService, UserIndexInsertionService>();
+            
 
             services.AddMvc();
 
