@@ -1,16 +1,12 @@
-﻿using System;
-using MassTransit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyTwitter.Data;
-using MyTwitter.Models;
-using MyTwitter.Services;
-using Nest;
-using ServiceStack.Redis;
 
 namespace MyTwitter
 {
@@ -26,57 +22,19 @@ namespace MyTwitter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<ApplicationUser, IdentityRole<int>>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.AddTransient<IBusControl>(
-                prv => Bus.Factory.CreateUsingRabbitMq(
-                    cfg => cfg.Host("queueserver", "/", ps =>
-                    {
-                        ps.Username("guest"); 
-                        ps.Password("guest");
-                    })));
-
-            services.AddTransient<ServiceStack.Redis.IRedisClient>(
-                p => new RedisManagerPool("redisserver").GetClient());
-
-            services.AddTransient<Services.IRedisClient, Services.RedisClient>();
-
-            // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
-
-            services.AddTransient<IQueueClient, QueueClient>();
-
-            var cs = new ConnectionSettings(new Uri("http://elasticsearch:9200"));
-            cs.DefaultIndex("default");
-            
-            services.AddTransient<IElasticClient>(x => new ElasticClient(cs));
-            services.AddTransient<IUserFinderService, UserFinderService>();
-            services.AddTransient<IUserIndexInsertionService, UserIndexInsertionService>();
-            
-
             services.AddMvc();
-
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
-                app.UseDatabaseErrorPage();
+//                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+//                {
+//                    HotModuleReplacement = true
+//                });
             }
             else
             {
@@ -85,13 +43,15 @@ namespace MyTwitter
 
             app.UseStaticFiles();
 
-            app.UseAuthentication();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
     }
