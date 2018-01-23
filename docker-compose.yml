@@ -70,6 +70,14 @@ services:
     volumes:
       - ./redis:/data
 
+  mytwitterclient:
+    image: mytwitterclient
+    build:
+      context: ./my-twitter
+      dockerfile: Dockerfile
+    ports:
+      - 80
+
 networks:
   appnet:
     driver: bridge
