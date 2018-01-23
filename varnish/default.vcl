@@ -2,7 +2,7 @@ vcl 4.0;
 import directors;
 
 backend service1 {
-    .host = "mytwitter";
+    .host = "mytwitterclient";
     .port = "80";
 }
 

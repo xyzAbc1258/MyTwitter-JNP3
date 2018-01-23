@@ -1,19 +1,23 @@
 version: '3'
 
 services:
+
   varnishtwitter:
-    image: varnishtwitter
-    build:
-      context: ./varnish
-      dockerfile: Dockerfile
-    volumes:
-      - ./varnish:/etc/varnish
+    image: eeacms/varnish
+    ports:
+    - "80:6081"
+    depends_on:
+    - mytwitterclient
+    environment:
+      BACKENDS: "mytwitterclient"
+      BACKENDS_PORT: "80"
+      DNS_ENABLED: "true"
+      BACKENDS_PROBE_INTERVAL: "3s"
+      BACKENDS_PROBE_TIMEOUT: "1s"
+      BACKENDS_PROBE_WINDOW: "3"
+      BACKENDS_PROBE_THRESHOLD: "2"
     networks:
       - appnet
-    ports:
-      - 80
-    depends_on:
-      - mytwitter
 
   mytwitter:
     image: mytwitter
@@ -77,6 +81,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80
+    networks:
+      - appnet
 
 networks:
   appnet:
