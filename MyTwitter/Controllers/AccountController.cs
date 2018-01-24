@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MyTwitter.Common;
 using MyTwitter.Models;
 using MyTwitter.Models.AccountViewModels;
 using MyTwitter.Services;
@@ -48,9 +49,10 @@ namespace MyTwitter.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public string[] Find(string searchPhrase)
+        public IActionResult Find(string searchPhrase)
         {
-            return _userFinderService.GetUsers(searchPhrase).Select(x => x.UserName).ToArray();
+            return View( _userFinderService.GetUsers(searchPhrase)
+                .Select(x => new UserDTO{Email = x.Email, Id = x.Id, Name = x.UserName}).ToList());
         }
 
         [HttpGet]

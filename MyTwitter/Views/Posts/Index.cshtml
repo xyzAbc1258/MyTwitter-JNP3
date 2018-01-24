@@ -1,15 +1,21 @@
-﻿@using MyTwitter.Controllers
+﻿@using Microsoft.AspNetCore.Routing
+@using MyTwitter.Controllers
 @model IEnumerable<Post>
 @{
     ViewData["Title"] = "Index";
 }
-    
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 <h2>Index</h2>
 @if (ViewData.ContainsKey(PostsController.VisitsCounterKey))
 {
     <div>
         <p>Wizyty : @ViewData[PostsController.VisitsCounterKey]</p>
     </div>
+
 }
-@Html.ActionLink("Dodaj post","Create")
-@Html.Partial("PostsList",Model)
+    @Html.ActionLink("Dodaj post", "Create");
+
+
+@Html.Partial("PostsList", Model)
